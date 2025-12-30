@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JABD - Joint Attention-Based Detector for Small Face Detection</title>
+    <!-- 引入外部样式库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        /* 顶部导航栏 */
+        .navbar {
+            background-color: #2c3e50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: #3498db !important;
+        }
+        /* 标题区域 */
+        .title-section {
+            padding: 60px 0;
+            background-color: white;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .paper-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .paper-authors {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .btn-code {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            margin-right: 10px;
+        }
+        .btn-code:hover {
+            background-color: #219653;
+            color: white;
+        }
+        .btn-github {
+            background-color: #3498db;
+            color: white;
+            border: none;
+        }
+        .btn-github:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+        /* 摘要区域 */
+        .abstract-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        /* 代码展示区域 */
+        .code-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+        .code-block {
+            background-color: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: "Consolas", "Monaco", monospace;
+        }
+        .code-comment { color: #6a9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-function { color: #dcdcaa; }
+        /* 页脚 */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">JABD Face Detector</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#abstract"><i class="fa fa-file-text-o"></i> Abstract</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#code"><i class="fa fa-code"></i> Core Code</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/liudabao001/JABD-Joint-Attention-Based-Detector-for-small-face-detection" target="_blank">
+                            <i class="fa fa-github"></i> GitHub Repository
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 标题区域 -->
+    <div class="title-section">
+        <div class="container text-center">
+            <h1 class="paper-title">JABD: Joint Attention-Based Detector for Small Face Detection</h1>
+            <p class="paper-authors">Author: Liudabao <span class="mx-2">|</span> Affiliation: XXX Laboratory <span class="mx-2">|</span> Publication: XXX</p>
+            <a href="https://github.com/liudabao001/JABD-Joint-Attention-Based-Detector-for-small-face-detection/archive/refs/heads/master.zip" class="btn btn-code">
+                <i class="fa fa-download"></i> Download Full Code
+            </a>
+            <a href="https://github.com/liudabao001/JABD-Joint-Attention-Based-Detector-for-small-face-detection" target="_blank" class="btn btn-github">
+                <i class="fa fa-github"></i> View on GitHub
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 摘要区域 -->
+        <section id="abstract" class="abstract-section">
+            <h2 class="section-title">Abstract</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>In practice, reliable face detection remains difficult. Faces appear at diverse scales, with small scale faces being particularly challenging. They are also often affected by occlusion and motion blur, and captured under varying illumination and resolution conditions. At the same time, many emerging deployments demand real-time inference on resource-constrained devices, where conventional two-stage detectors incur prohibitive computational overhead.</p>
+                    <p>To address these challenges, we present a Joint Attention-Based Detector (JABD) for lightweight, high-accuracy one-stage face detection in crowded scenes. JABD introduces a Balanced Efficient Channel Attention (BECA) module to amplify subtle facial cues, bolstering discrimination of small or partially occluded faces, and a Cross-Scale Attention Fusion (CSAF) module couples refined up-sampling with a lightweight non-local block to reduce the information loss typical of conventional FPNs.</p>
+                    <p>Additionally, we design an Anchor Box Matching Mechanism (ABMM) and align anchor shapes and receptive fields with a broad spectrum of face sizes. Bounding-box regression is optimized with the DIoU loss, which accelerates convergence and yields tighter localization.</p>
+                    <p>Extensive experiments on the Wider Face benchmark demonstrate the effectiveness of each component: JABD attains 96.48%, 95.42%, and 90.05% average precision on the Easy, Medium, and Hard subsets. These results confirm that JABD provides a practical, real-time foundation for downstream facial-analysis pipelines in diverse visual environments.</p>
+                    <p>Keywords: Small face detection; Joint attention mechanism; Feature fusion; Lightweight network</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="bg-light p-3 rounded">
+                        <h5 class="text-center mb-3">Core Formula</h5>
+                        <p class="text-center">$$JAM(F) = M_s(F) \otimes M_c(F) + F$$</p>
+                        <p class="text-muted small text-center">Note: $M_s$ = Spatial Attention, $M_c$ = Channel Attention, $\otimes$ = Element-wise multiplication</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 代码展示区域 -->
+        <section id="code" class="code-section">
+            <h2 class="section-title">Core Code</h2>
+            <p class="mb-4">The core implementation of the Joint Attention Module is shown below. For full code, please refer to the GitHub repository:</p>
+            <div class="code-block">
+<pre>
+<span class="code-comment"># Joint Attention Module (JAM)</span>
+import torch
+import torch.nn as nn
+
+class JointAttentionModule(nn.Module):
+    def __init__(self, in_channels, reduction=16):
+        <span class="code-keyword">super</span>(JointAttentionModule, self).__init__()
+        <span class="code-comment"># Spatial Attention Branch</span>
+        self.spatial_att = nn.Sequential(
+            nn.Conv2d(in_channels, 1, kernel_size=7, padding=3, bias=False),
+            nn.Sigmoid()
+        )
+        <span class="code-comment"># Channel Attention Branch</span>
+        self.channel_att = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(in_channels, in_channels//reduction, 1, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(in_channels//reduction, in_channels, 1, bias=False),
+            nn.Sigmoid()
+        )
+
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x):
+        <span class="code-comment"># Spatial Attention: Generate spatial weight map</span>
+        s_att = self.spatial_att(x)
+        <span class="code-comment"># Channel Attention: Generate channel weight</span>
+        c_att = self.channel_att(x)
+        <span class="code-comment"># Joint Attention: Element-wise multiplication + Residual connection</span>
+        out = x * s_att * c_att + x
+        <span class="code-keyword">return</span> out
+
+<span class="code-comment"># Test the module</span>
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    model = JointAttentionModule(256)
+    input_feat = torch.randn(1, 256, 64, 64)
+    output_feat = model(input_feat)
+    print(f"Input shape: {input_feat.shape}, Output shape: {output_feat.shape}")
+</pre>
+            </div>
+            <div class="mt-3 text-end">
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyCode()">
+                    <i class="fa fa-copy"></i> Copy Code
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container text-center">
+            <p>© 2025 JABD: Joint Attention-Based Detector for Small Face Detection</p>
+            <p>
+                <a href="https://github.com/liudabao001/JABD-Joint-Attention-Based-Detector-for-small-face-detection" class="text-white mx-2">
+                    <i class="fa fa-github"></i> GitHub
+                </a>
+                <a href="mailto:your-email@example.com" class="text-white mx-2">
+                    <i class="fa fa-envelope"></i> Contact Author
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- 引入JS库 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- 交互逻辑 -->
+    <script>
+        // 复制代码功能
+        function copyCode() {
+            const codeText = document.querySelector('.code-block pre').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('Code copied successfully!');
+            }).catch(() => {
+                alert('Failed to copy code, please copy manually');
+            });
+        }
+    </script>
+</body>
+</html>
